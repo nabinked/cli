@@ -20,6 +20,17 @@ namespace Microsoft.DotNet.Cli
     {
         public static int Main(string[] args)
         {
+            if (args.Length > 1 && args[0] == "exec")
+            {
+                var a = System.Reflection.Assembly.Load(System.IO.Path.GetFileNameWithoutExtension(args[1]));
+                string[] newArgs = new string[args.Length - 2];
+                Array.Copy(args, 2, newArgs, 0, newArgs.Length);
+
+                // PREFER: return (int)a.EntryPoint.Invoke(null, new object[] { newArgs });
+                // but our compiler wouldn't have to suck for that
+                return (int)a.GetType("Microsoft.Build.CommandLine.MSBuildApp").GetMethod("Main").Invoke(null, new object[] { newArgs });
+            }
+
             DebugHelper.HandleDebugSwitch(ref args);
 
             new MulticoreJitActivator().TryActivateMulticoreJit();

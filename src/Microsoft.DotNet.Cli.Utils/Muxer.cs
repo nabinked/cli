@@ -45,9 +45,10 @@ namespace Microsoft.DotNet.Cli.Utils
 
         public static string GetDataFromAppDomain(string propertyName)
         {
-            var appDomainType = typeof(object).GetTypeInfo().Assembly?.GetType("System.AppDomain");
-            var currentDomain = appDomainType?.GetProperty("CurrentDomain")?.GetValue(null);
-            var deps = appDomainType?.GetMethod("GetData")?.Invoke(currentDomain, new[] { propertyName });
+            // var appDomainType = typeof(object).GetTypeInfo().Assembly?.GetType("System.AppDomain");
+            // var currentDomain = appDomainType?.GetProperty("CurrentDomain")?.GetValue(null);
+            // var deps = appDomainType?.GetMethod("GetData")?.Invoke(currentDomain, new[] { propertyName });
+            object deps = Environment.GetEnvironmentVariable(propertyName);
 
             return deps as string;
         }
